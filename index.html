@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARARAT Museum — Booking Experience</title>
+
+<!-- Heritage-feel typography: serif display + clean sans body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-deep: #8B6914;
+  --gold-light: #E8D89A;
+  --burgundy: #7A1818;
+  --ink: #1A1A1A;
+  --charcoal: #2E2E2E;
+  --ash: #6B6B6B;
+  --bone: #F8F5EC;
+  --cream: #FAF7F0;
+  --stone: #EDE8DC;
+  --line: #DDD4BC;
+  --error: #B33A2E;
+  --display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --body: 'Inter', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ─── Global heritage-paper texture ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(139, 105, 20, 0.05) 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 80%, rgba(139, 105, 20, 0.04) 50%, transparent 51%),
+    radial-gradient(1px 1px at 50% 50%, rgba(139, 105, 20, 0.03) 50%, transparent 51%);
+  background-size: 200px 200px, 250px 250px, 180px 180px;
+  opacity: 0.6;
+}
+
+/* ─── Top brand bar ─── */
+.brand-bar {
+  position: relative;
+  z-index: 10;
+  background: var(--ink);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gold-deep);
+}
+.brand-bar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-mark-emblem {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+}
+.brand-mark-emblem svg { width: 100%; height: 100%; }
+.brand-mark-text {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.brand-mark-sub {
+  font-family: var(--body);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.brand-meta {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+}
+
+/* ─── Page chrome ─── */
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 32px 80px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.display-h {
+  font-family: var(--display);
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+h1.display-h { font-size: 56px; }
+h2.display-h { font-size: 36px; }
+h3.display-h { font-size: 26px; }
+
+.lede {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ash);
+  font-size: 19px;
+  line-height: 1.5;
+  max-width: 640px;
+}
+
+/* ─── Stepper ─── */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 40px 0 50px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ash);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.step.active { color: var(--ink); }
+.step.complete { color: var(--gold-deep); }
+.step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-size: 14px;
+  background: var(--cream);
+  transition: all 0.3s ease;
+}
+.step.active .step-num {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 600;
+}
+.step.complete .step-num {
+  border-color: var(--gold-deep);
+  background: var(--gold-deep);
+  color: var(--cream);
+}
+.step-divider {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  min-width: 20px;
+}
+
+/* ─── Stage panel ─── */
+.stage {
+  display: none;
+  animation: stageIn 0.5s ease;
+}
+.stage.active { display: block; }
+@keyframes stageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Package cards (Stage 1) ─── */
+.packages {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 36px;
+}
+.pkg {
+  background: var(--bone);
+  border: 1px solid var(--line);
+  padding: 32px 28px 28px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.pkg:hover {
+  border-color: var(--gold);
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(139, 105, 20, 0.08);
+}
+.pkg.selected {
+  border-color: var(--gold);
+  background: white;
+  box-shadow: 0 0 0 1px var(--gold), 0 12px 32px rgba(139, 105, 20, 0.12);
+}
+.pkg.selected::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231A1A1A' stroke-width='3'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-size: 14px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.pkg-name {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.pkg-tagline {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 22px;
+  font-weight: 500;
+}
+.pkg-desc {
+  font-size: 14px;
+  color: var(--charcoal);
+  line-height: 1.6;
+  margin-bottom: 22px;
+  flex-grow: 1;
+}
+.pkg-tasting {
+  font-size: 13px;
+  color: var(--ash);
+  font-style: italic;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 20px;
+}
+.pkg-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.pkg-price-amount {
+  font-family: var(--display);
+  font-size: 32px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.pkg-price-currency {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--ash);
+  text-transform: uppercase;
+}
+
+/* ─── Premium / Founders' tier section ─── */
+.premium-section {
+  margin-top: 64px;
+  padding-top: 48px;
+  position: relative;
+}
+.premium-divider {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.premium-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+}
+.premium-divider-label {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--gold-deep);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.premium-heading {
+  font-size: 36px !important;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.premium-lede {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ash);
+  font-size: 17px;
+  line-height: 1.5;
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+.packages-premium {
+  margin-top: 0;
+}
+.pkg-premium {
+  background: linear-gradient(180deg, #FAF7F0 0%, #F2EBD8 100%);
+  border-color: var(--gold);
+  position: relative;
+  overflow: hidden;
+}
+.pkg-premium::after {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.pkg-premium:hover {
+  border-color: var(--gold-deep);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5EED6 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(139, 105, 20, 0.16);
+}
+.pkg-premium.selected {
+  border-color: var(--gold-deep);
+  box-shadow: 0 0 0 2px var(--gold-deep), 0 16px 40px rgba(139, 105, 20, 0.2);
+}
+.pkg-founders {
+  background: linear-gradient(180deg, #1F1A12 0%, #2A2418 100%);
+  color: var(--cream);
+  border-color: var(--gold);
+}
+.pkg-founders .pkg-name { color: var(--cream); }
+.pkg-founders .pkg-tagline { color: var(--gold-light); }
+.pkg-founders .pkg-desc { color: rgba(248, 245, 236, 0.85); }
+.pkg-founders .pkg-tasting {
+  color: rgba(232, 216, 154, 0.9);
+  border-color: rgba(201, 168, 76, 0.3);
+}
+.pkg-founders .pkg-price-amount { color: var(--gold); }
+.pkg-founders .pkg-price-currency { color: rgba(232, 216, 154, 0.6); }
+.pkg-founders:hover {
+  background: linear-gradient(180deg, #2A2418 0%, #3A3221 100%);
+}
+.pkg-founders.selected {
+  box-shadow: 0 0 0 2px var(--gold), 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+.pkg-founders.selected::before {
+  background: var(--gold);
+}
+.pkg-founders::after {
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, transparent 65%);
+}
+.pkg-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 600;
+  background: var(--gold);
+  color: var(--ink);
+  margin-bottom: 14px;
+  align-self: flex-start;
+}
+.pkg-founders .pkg-badge {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+/* ─── Date picker (Stage 2) ─── */
+.date-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 48px;
+  margin-top: 36px;
+}
+.date-field {
+  margin-bottom: 24px;
+}
+.date-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.date-input, .text-input, .select-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: white;
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink);
+  transition: border-color 0.2s ease;
+}
+.date-input:focus, .text-input:focus, .select-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+}
+.time-slot {
+  padding: 10px 4px;
+  border: 1px solid var(--line);
+  background: white;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  letter-spacing: 0.04em;
+}
+.time-slot:hover { border-color: var(--gold); }
+.time-slot.selected {
+  background: var(--ink);
+  color: var(--gold);
+  border-color: var(--ink);
+}
+.summary-aside {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.summary-aside::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gold);
+}
+.summary-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px;
+}
+.summary-row:last-of-type { border-bottom: none; }
+.summary-row dt {
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.04em;
+}
+.summary-row dd {
+  color: var(--cream);
+  font-weight: 500;
+  text-align: right;
+}
+.summary-total {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--gold);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.summary-total dt {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.summary-total dd {
+  font-family: var(--display);
+  font-size: 30px;
+  color: var(--cream);
+}
+
+/* ─── Detail form (Stage 3) ─── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 36px;
+}
+.form-grid .full { grid-column: 1 / -1; }
+.field-group { display: flex; flex-direction: column; }
+
+/* ─── Palate quiz (Stage 4) ─── */
+.quiz-intro {
+  background: var(--bone);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  padding: 24px 28px;
+  margin-top: 36px;
+  margin-bottom: 32px;
+}
+.quiz-question {
+  margin-bottom: 36px;
+  padding-bottom: 32px;
+  border-bottom: 1px dashed var(--line);
+}
+.quiz-question:last-of-type { border-bottom: none; }
+.quiz-q-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold-deep);
+  margin-bottom: 6px;
+}
+.quiz-q-text {
+  font-family: var(--display);
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 22px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.quiz-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.quiz-option {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.quiz-option:hover { border-color: var(--gold); }
+.quiz-option.selected {
+  border-color: var(--gold);
+  background: var(--bone);
+  box-shadow: 0 0 0 1px var(--gold);
+}
+.quiz-option-bullet {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  margin-top: 2px;
+  position: relative;
+  transition: all 0.15s ease;
+}
+.quiz-option.selected .quiz-option-bullet {
+  border-color: var(--gold);
+  background: var(--gold);
+}
+.quiz-option.selected .quiz-option-bullet::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+.quiz-option-content { flex: 1; }
+.quiz-option-label {
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.quiz-option-help {
+  font-size: 13px;
+  color: var(--ash);
+  line-height: 1.4;
+}
+
+/* ─── Confirmation (Stage 5) ─── */
+.confirm-hero {
+  text-align: center;
+  padding: 24px 0 32px;
+}
+.confirm-mark {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.confirm-mark::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.confirm-mark svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+.confirm-ref {
+  display: inline-block;
+  margin: 14px 0 32px;
+  padding: 8px 18px;
+  background: var(--ink);
+  color: var(--gold);
+  font-family: var(--body);
+  letter-spacing: 0.2em;
+  font-size: 13px;
+  font-weight: 500;
+}
+.profile-card {
+  background: linear-gradient(135deg, var(--ink) 0%, #2A2520 100%);
+  color: var(--cream);
+  padding: 40px 36px;
+  margin-top: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.profile-card::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.profile-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.profile-title {
+  font-family: var(--display);
+  font-size: 38px;
+  margin-bottom: 12px;
+  color: var(--cream);
+  font-weight: 500;
+}
+.profile-tagline {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--gold-light);
+  font-size: 17px;
+  margin-bottom: 26px;
+  line-height: 1.5;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.profile-row dt {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+.profile-row dd {
+  font-size: 15px;
+  color: var(--cream);
+}
+.profile-recs {
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(255,255,255,0.04);
+  border-left: 2px solid var(--gold);
+}
+.profile-recs h4 {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.profile-recs p {
+  font-family: var(--display);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--cream);
+}
+
+.export-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-family: var(--body);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--gold);
+  border-color: var(--ink);
+}
+.btn-primary:hover {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+}
+.btn-primary:disabled {
+  background: var(--stone);
+  color: var(--ash);
+  border-color: var(--stone);
+  cursor: not-allowed;
+}
+.btn-ghost {
+  color: var(--charcoal);
+  border-color: var(--line);
+  background: white;
+}
+.btn-ghost:hover {
+  border-color: var(--gold-deep);
+  color: var(--gold-deep);
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+}
+.btn-gold:hover {
+  background: var(--gold-deep);
+  border-color: var(--gold-deep);
+  color: var(--cream);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+/* ─── Modal (consent) ─── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20,20,20,0.65);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  padding: 24px;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.25s ease;
+}
+.modal-overlay.open { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--cream);
+  max-width: 580px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-deep) 100%);
+}
+.modal-body {
+  padding: 44px 44px 36px;
+}
+.modal-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 20px;
+  color: var(--gold-deep);
+}
+.modal-icon svg { width: 100%; height: 100%; stroke-width: 1.4; fill: none; stroke: currentColor; }
+.modal-title {
+  font-family: var(--display);
+  font-size: 30px;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.modal-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.modal-text {
+  color: var(--charcoal);
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+.modal-list {
+  list-style: none;
+  margin-bottom: 22px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+}
+.modal-list li {
+  padding: 8px 0 8px 24px;
+  font-size: 13px;
+  color: var(--charcoal);
+  position: relative;
+  line-height: 1.5;
+}
+.modal-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 16px;
+  width: 8px;
+  height: 1px;
+  background: var(--gold);
+}
+.consent-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 24px 0 28px;
+}
+.consent-check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--charcoal);
+  transition: border-color 0.15s ease;
+}
+.consent-check:hover { border-color: var(--gold-deep); }
+.consent-check input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--gold-deep);
+  cursor: pointer;
+}
+.consent-check span strong {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+.consent-required {
+  color: var(--burgundy);
+  font-weight: 500;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* ─── Tasting glass illustration ─── */
+.divider-glass {
+  text-align: center;
+  margin: 30px auto 24px;
+  opacity: 0.4;
+  color: var(--gold-deep);
+}
+.divider-glass svg { width: 36px; height: 36px; }
+
+/* ─── Responsive ─── */
+@media (max-width: 760px) {
+  .page-wrap { padding: 32px 20px 60px; }
+  h1.display-h { font-size: 38px; }
+  .packages, .form-grid, .quiz-options, .profile-grid { grid-template-columns: 1fr; }
+  .date-grid { grid-template-columns: 1fr; gap: 28px; }
+  .stepper { gap: 8px; }
+  .step { font-size: 9px; }
+  .step-divider { min-width: 8px; }
+  .modal-body { padding: 32px 24px 28px; }
+  .actions { flex-direction: column; gap: 12px; }
+  .actions .btn { width: 100%; justify-content: center; }
+}
+
+/* ─── Print: clean export of confirmation only ─── */
+@media print {
+  body { background: white; }
+  body::before { display: none; }
+  .brand-bar, .stepper, .actions, .export-row, .stage:not(.active) { display: none !important; }
+  .page-wrap { padding: 0; max-width: none; }
+  .profile-card { box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ───────────── BRAND BAR ───────────── -->
+<header class="brand-bar">
+  <div class="brand-bar-inner">
+    <div class="brand-mark">
+      <div class="brand-mark-emblem">
+        <!-- Stylized winged crest, evoking ARARAT logo -->
+        <svg viewBox="0 0 32 32" fill="currentColor">
+          <path d="M16 4 L12 10 L4 12 L8 16 L4 22 L12 22 L16 28 L20 22 L28 22 L24 16 L28 12 L20 10 Z" opacity="0.85"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-mark-text">ARARAT</div>
+        <div class="brand-mark-sub">Museum &nbsp;·&nbsp; Since 1887</div>
+      </div>
+    </div>
+    <div class="brand-meta">Yerevan, Armenia</div>
+  </div>
+</header>
+
+<main class="page-wrap">
+
+  <!-- ───────────── STEPPER ───────────── -->
+  <nav class="stepper" id="stepper">
+    <div class="step active" data-step="1"><span class="step-num">1</span>Experience</div>
+    <div class="step-divider"></div>
+    <div class="step" data-step="2"><span class="step-num">2</span>Date &amp; Time</div>
+    <div class="step-divider"></div>
+    <div class="step" data-step="3"><span class="step-num">3</span>Details</div>
+    <div class="step-divider"></div>
+    <div class="step" data-step="4"><span class="step-num">4</span>Palate</div>
+    <div class="step-divider"></div>
+    <div class="step" data-step="5"><span class="step-num">5</span>Confirmed</div>
+  </nav>
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  STAGE 1 — PACKAGE SELECTION    ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <section class="stage active" data-stage="1">
+    <div class="eyebrow">Begin your visit</div>
+    <h1 class="display-h">Choose your experience</h1>
+    <p class="lede">Each tour leads through the basalt cellars of the Yerevan Brandy Company and concludes with a tasting curated to your selection. Four pathways into 139 years of Armenian brandy.</p>
+
+    <div class="packages" id="packages">
+      <div class="pkg" data-pkg="standard" data-price="4500" data-name="Standard Package">
+        <div class="pkg-name">Standard</div>
+        <div class="pkg-tagline">An introduction</div>
+        <div class="pkg-desc">Walk the aging workshop, follow the story of ARARAT, and conclude with the foundational pairing of Three Stars and the seven-year Ani.</div>
+        <div class="pkg-tasting">ARARAT Three Stars · 25 ml &nbsp;·&nbsp; ARARAT Ani 7 yrs · 25 ml</div>
+        <div class="pkg-price">
+          <span class="pkg-price-amount">4,500</span>
+          <span class="pkg-price-currency">AMD · per guest</span>
+        </div>
+      </div>
+
+      <div class="pkg" data-pkg="advanced" data-price="10000" data-name="Advanced Package">
+        <div class="pkg-name">Advanced</div>
+        <div class="pkg-tagline">A study in aging</div>
+        <div class="pkg-desc">A deeper passage through the cellars and a guided tasting across three of ARARAT's most decorated aged expressions.</div>
+        <div class="pkg-tasting">Akhtamar 10 yrs &nbsp;·&nbsp; Vaspurakan 15 yrs &nbsp;·&nbsp; Nairi 20 yrs · 25 ml each</div>
+        <div class="pkg-price">
+          <span class="pkg-price-amount">10,000</span>
+          <span class="pkg-price-currency">AMD · per guest</span>
+        </div>
+      </div>
+
+      <div class="pkg" data-pkg="flavors" data-price="7500" data-name="ARARAT Flavors">
+        <div class="pkg-name">Flavors</div>
+        <div class="pkg-tagline">Unexpected pairings</div>
+        <div class="pkg-desc">For those drawn to the unconventional. The Flavors path moves between Ani's classical structure and the apricot and coffee infusions that follow.</div>
+        <div class="pkg-tasting">Ani 7 yrs &nbsp;·&nbsp; ARARAT Apricot &nbsp;·&nbsp; ARARAT Coffee · 25 ml each</div>
+        <div class="pkg-price">
+          <span class="pkg-price-amount">7,500</span>
+          <span class="pkg-price-currency">AMD · per guest</span>
+        </div>
+      </div>
+
+      <div class="pkg" data-pkg="ararat10" data-price="12000" data-name="ARARAT 10">
+        <div class="pkg-name">ARARAT 10</div>
+        <div class="pkg-tagline">A comparative tasting</div>
+        <div class="pkg-desc">Three ten-year expressions presented side by side. A rare opportunity to read the master blender's hand across distinct character and aroma.</div>
+        <div class="pkg-tasting">Akhtamar &nbsp;·&nbsp; Armenia &nbsp;·&nbsp; Dvin Collection Reserve · 25 ml each</div>
+        <div class="pkg-price">
+          <span class="pkg-price-amount">12,000</span>
+          <span class="pkg-price-currency">AMD · per guest</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="premium-section">
+      <div class="premium-divider">
+        <span class="premium-divider-line"></span>
+        <span class="premium-divider-label">By Reservation Only · Limited Availability</span>
+        <span class="premium-divider-line"></span>
+      </div>
+      <h3 class="display-h premium-heading">The Founders' Collection</h3>
+      <p class="premium-lede">Two experiences for guests seeking something rarer. Each is appointment-only, hosted in private settings, and limited to a small number of bookings each week.</p>
+
+      <div class="packages packages-premium">
+        <div class="pkg pkg-premium" data-pkg="sans-pareil" data-price="60000" data-name="ARARAT Sans Pareil">
+          <div class="pkg-badge">Signature</div>
+          <div class="pkg-name">ARARAT Sans Pareil</div>
+          <div class="pkg-tagline">A bottle of your own making</div>
+          <div class="pkg-desc">Select a barrel expression in the cooperage, hand-fill your own bottle at cask strength, sign the label, and have it sealed and registered in the Yerevan Brandy Company's digital archive — a serial number that travels with the bottle for life.</div>
+          <div class="pkg-tasting">Includes Advanced tour &nbsp;·&nbsp; Private bottling ceremony &nbsp;·&nbsp; Engraved bottle, 0.5 L</div>
+          <div class="pkg-price">
+            <span class="pkg-price-amount">60,000</span>
+            <span class="pkg-price-currency">AMD · per guest</span>
+          </div>
+        </div>
+
+        <div class="pkg pkg-premium pkg-founders" data-pkg="founders" data-price="125000" data-name="The Founders' Tier">
+          <div class="pkg-badge">Ultra-Premium</div>
+          <div class="pkg-name">The Founders' Tier</div>
+          <div class="pkg-tagline">A private audience with the master blender</div>
+          <div class="pkg-desc">Access to the restricted archive cellar — bottles withheld from the standard tour. A personal tasting led by an ARARAT master blender, a guided blending session, and a closing toast on the rooftop overlooking Mount Ararat.</div>
+          <div class="pkg-tasting">Private cellar access &nbsp;·&nbsp; Master blender host &nbsp;·&nbsp; Personal blending session &nbsp;·&nbsp; Rooftop conclusion</div>
+          <div class="pkg-price">
+            <span class="pkg-price-amount">125,000</span>
+            <span class="pkg-price-currency">AMD · per guest</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <span></span>
+      <button class="btn btn-primary" id="goto2" disabled>Continue &nbsp;→</button>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  STAGE 2 — DATE, TIME, GUESTS    ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <section class="stage" data-stage="2">
+    <div class="eyebrow">Plan your visit</div>
+    <h2 class="display-h">When would you like to come?</h2>
+    <p class="lede">Booking opens up to 60 days in advance. Choose your preferred date and time below.</p>
+
+    <div class="date-grid">
+      <div>
+        <div class="date-field">
+          <label class="date-label" for="visitDate">Visit Date</label>
+          <input type="date" class="date-input" id="visitDate">
+        </div>
+
+        <div class="date-field">
+          <label class="date-label">Tour Time</label>
+          <div class="time-slots" id="timeSlots">
+            <div class="time-slot" data-time="11:00">11:00</div>
+            <div class="time-slot" data-time="12:30">12:30</div>
+            <div class="time-slot" data-time="14:00">14:00</div>
+            <div class="time-slot" data-time="15:30">15:30</div>
+            <div class="time-slot" data-time="17:00">17:00</div>
+            <div class="time-slot" data-time="18:30">18:30</div>
+          </div>
+        </div>
+
+        <div class="date-field">
+          <label class="date-label" for="guestCount">Number of Guests</label>
+          <select class="select-input" id="guestCount">
+            <option value="1">1 guest</option>
+            <option value="2" selected>2 guests</option>
+            <option value="3">3 guests</option>
+            <option value="4">4 guests</option>
+            <option value="5">5 guests</option>
+            <option value="6">6 guests</option>
+            <option value="7">7 guests</option>
+            <option value="8">8 guests</option>
+            <option value="8+">8+ guests (group inquiry)</option>
+          </select>
+        </div>
+
+        <div class="date-field">
+          <label class="date-label" for="tourLanguage">Preferred Tour Language</label>
+          <select class="select-input" id="tourLanguage">
+            <option value="English" selected>English</option>
+            <option value="Armenian">Armenian</option>
+            <option value="Russian">Russian</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+          </select>
+        </div>
+      </div>
+
+      <aside class="summary-aside" id="aside2">
+        <div class="summary-eyebrow">Your Reservation</div>
+        <dl>
+          <div class="summary-row"><dt>Experience</dt><dd id="aside-pkg">—</dd></div>
+          <div class="summary-row"><dt>Date</dt><dd id="aside-date">—</dd></div>
+          <div class="summary-row"><dt>Time</dt><dd id="aside-time">—</dd></div>
+          <div class="summary-row"><dt>Guests</dt><dd id="aside-guests">2</dd></div>
+          <div class="summary-row"><dt>Language</dt><dd id="aside-lang">English</dd></div>
+        </dl>
+        <div class="summary-total">
+          <dt>Total</dt>
+          <dd id="aside-total">— AMD</dd>
+        </div>
+      </aside>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-ghost" data-back="1">←&nbsp; Back</button>
+      <button class="btn btn-primary" id="goto3" disabled>Continue &nbsp;→</button>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  STAGE 3 — GUEST DETAILS         ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <section class="stage" data-stage="3">
+    <div class="eyebrow">Guest information</div>
+    <h2 class="display-h">A few details about you</h2>
+    <p class="lede">We'll use these to confirm your booking and prepare your guide. Your information is held in confidence and is never shared without your consent.</p>
+
+    <div class="form-grid">
+      <div class="field-group">
+        <label class="date-label" for="firstName">First Name</label>
+        <input type="text" class="text-input" id="firstName" placeholder="Anna">
+      </div>
+      <div class="field-group">
+        <label class="date-label" for="lastName">Last Name</label>
+        <input type="text" class="text-input" id="lastName" placeholder="Hovhannisyan">
+      </div>
+      <div class="field-group full">
+        <label class="date-label" for="email">Email</label>
+        <input type="email" class="text-input" id="email" placeholder="anna@example.com">
+      </div>
+      <div class="field-group">
+        <label class="date-label" for="phone">Phone</label>
+        <input type="tel" class="text-input" id="phone" placeholder="+374 ...">
+      </div>
+      <div class="field-group">
+        <label class="date-label" for="country">Country of Residence</label>
+        <input type="text" class="text-input" id="country" placeholder="Armenia">
+      </div>
+      <div class="field-group full">
+        <label class="date-label" for="occasion">Occasion (Optional)</label>
+        <select class="select-input" id="occasion">
+          <option value="">Select if you wish to share —</option>
+          <option>Personal interest</option>
+          <option>Birthday or celebration</option>
+          <option>Anniversary</option>
+          <option>Visiting from abroad</option>
+          <option>Diaspora homecoming</option>
+          <option>Corporate / business</option>
+          <option>Gift for someone else</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider-glass">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M7 3 h10 l-1 8 a4 4 0 0 1 -8 0 z"/>
+        <line x1="12" y1="15" x2="12" y2="20"/>
+        <line x1="8" y1="20" x2="16" y2="20"/>
+      </svg>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-ghost" data-back="2">←&nbsp; Back</button>
+      <button class="btn btn-primary" id="goto4">Personalize my tasting &nbsp;→</button>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  STAGE 4 — PALATE QUIZ           ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <section class="stage" data-stage="4">
+    <div class="eyebrow">Spirit Profile · Three minutes</div>
+    <h2 class="display-h">Tell us about your palate</h2>
+    <p class="lede">Your guide will use these answers to shape your narrative path through the cellars and to recommend an expression that matches your taste. There are no wrong answers.</p>
+
+    <div class="quiz-intro">
+      <strong style="color: var(--ink); font-family: var(--display); font-size: 18px; display: block; margin-bottom: 6px;">Why we ask</strong>
+      <span style="font-size: 13px; color: var(--charcoal);">Each ARARAT expression has a distinct character — from the floral lightness of Ani to the deep complexity of Nairi. Knowing your taste helps us pour the right one at the right moment in your visit.</span>
+    </div>
+
+    <div id="quizQuestions">
+      <!-- Q1 -->
+      <div class="quiz-question" data-q="experience">
+        <div class="quiz-q-num">Question 01</div>
+        <div class="quiz-q-text">How would you describe your experience with brandy or aged spirits?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="newcomer">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">A newcomer</div>
+              <div class="quiz-option-help">This will be one of my first tastings.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="curious">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Curious enthusiast</div>
+              <div class="quiz-option-help">I enjoy spirits but rarely study them.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="seasoned">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Seasoned drinker</div>
+              <div class="quiz-option-help">I taste thoughtfully and often.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="connoisseur">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Connoisseur</div>
+              <div class="quiz-option-help">Brandy or whisky is something I collect.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question" data-q="palate">
+        <div class="quiz-q-num">Question 02</div>
+        <div class="quiz-q-text">Which character draws you in most?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="floral">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Floral and bright</div>
+              <div class="quiz-option-help">Apricot, white blossom, honeyed lightness.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="balanced">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Balanced and warm</div>
+              <div class="quiz-option-help">Vanilla, oak, dried fruit, gentle spice.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="rich">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Rich and complex</div>
+              <div class="quiz-option-help">Tobacco, leather, dark fruit, long finish.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="surprise">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Surprise me</div>
+              <div class="quiz-option-help">I'd rather the master blender choose.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question" data-q="motivation">
+        <div class="quiz-q-num">Question 03</div>
+        <div class="quiz-q-text">What draws you to ARARAT today?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="heritage">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">The heritage</div>
+              <div class="quiz-option-help">139 years of Armenian history in a glass.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="craft">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">The craft</div>
+              <div class="quiz-option-help">How a brandy is actually made and aged.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="story">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">The stories</div>
+              <div class="quiz-option-help">Churchill's barrel, Yalta, the diplomats.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="taste">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">The tasting itself</div>
+              <div class="quiz-option-help">I came primarily for the brandy.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question" data-q="pace">
+        <div class="quiz-q-num">Question 04</div>
+        <div class="quiz-q-text">How would you like the tour to feel?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="contemplative">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Contemplative</div>
+              <div class="quiz-option-help">Slower pace, time to look and reflect.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="conversational">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Conversational</div>
+              <div class="quiz-option-help">A rich exchange with my guide.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="immersive">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Immersive</div>
+              <div class="quiz-option-help">Sensory, story-driven, full of texture.</div>
+            </div>
+          </div>
+          <div class="quiz-option" data-val="efficient">
+            <div class="quiz-option-bullet"></div>
+            <div class="quiz-option-content">
+              <div class="quiz-option-label">Efficient</div>
+              <div class="quiz-option-help">I'd like to stay close to the timing.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-ghost" data-back="3">←&nbsp; Back</button>
+      <button class="btn btn-primary" id="goto5" disabled>Confirm reservation &nbsp;→</button>
+    </div>
+  </section>
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  STAGE 5 — CONFIRMATION          ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <section class="stage" data-stage="5">
+    <div class="confirm-hero">
+      <div class="confirm-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="eyebrow">Reservation confirmed</div>
+      <h2 class="display-h">We look forward to welcoming you.</h2>
+      <div class="confirm-ref" id="confirmRef">ARM-—————</div>
+      <p class="lede" style="margin: 0 auto;">A confirmation has been sent to your email. The information below has been shared with your guide so they can prepare a path tailored to your visit.</p>
+    </div>
+
+    <div class="profile-card" id="profileCard">
+      <div class="profile-eyebrow">Your Spirit Profile</div>
+      <h3 class="profile-title" id="profileTitle">The Curious Traveler</h3>
+      <p class="profile-tagline" id="profileTagline">A floral and balanced palate, drawn to the heritage behind the bottle.</p>
+
+      <dl class="profile-grid">
+        <div class="profile-row"><dt>Guest</dt><dd id="profileName">—</dd></div>
+        <div class="profile-row"><dt>Reference</dt><dd id="profileRef">—</dd></div>
+        <div class="profile-row"><dt>Visit</dt><dd id="profileVisit">—</dd></div>
+        <div class="profile-row"><dt>Experience</dt><dd id="profilePackage">—</dd></div>
+        <div class="profile-row"><dt>Guests &amp; Language</dt><dd id="profileGuestsLang">—</dd></div>
+        <div class="profile-row"><dt>Total</dt><dd id="profileTotal">—</dd></div>
+      </dl>
+
+      <div class="profile-recs">
+        <h4>Your Guide's Notes</h4>
+        <p id="profileRecs">—</p>
+      </div>
+    </div>
+
+    <div class="export-row">
+      <button class="btn btn-gold" id="downloadJSON">⬇ &nbsp; Export Booking (JSON)</button>
+      <button class="btn btn-ghost" id="downloadHTML">⬇ &nbsp; Save as HTML</button>
+      <button class="btn btn-ghost" id="printConfirm">⎙ &nbsp; Print / Save as PDF</button>
+      <button class="btn btn-ghost" id="restart">↻ &nbsp; Start Over</button>
+    </div>
+
+    <p style="margin-top: 32px; font-size: 12px; color: var(--ash); font-style: italic; line-height: 1.6;">
+      <strong style="color: var(--charcoal); font-style: normal;">Prototype note for stakeholders:</strong>
+      &nbsp; This is the proposed flow for ARARAT Museum's online booking and pre-visit profiling system,
+      designed by the BAB Capstone Consulting team for the American University of Armenia. The exports
+      above demonstrate the data structure that would feed the proposed CRM layer and guide-briefing system.
+    </p>
+  </section>
+
+</main>
+
+<!-- ╔══════════════════════════════════╗ -->
+<!-- ║  CONSENT MODAL                   ║ -->
+<!-- ╚══════════════════════════════════╝ -->
+<div class="modal-overlay" id="consentModal">
+  <div class="modal" role="dialog" aria-labelledby="consentTitle">
+    <div class="modal-body">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2 L4 6 v6 c0 5 3.5 9 8 10 c4.5 -1 8 -5 8 -10 V6 L12 2 z"/>
+          <path d="M9 12 l2 2 l4 -4"/>
+        </svg>
+      </div>
+      <div class="modal-eyebrow">Before we continue</div>
+      <h3 class="modal-title" id="consentTitle">A note on your data</h3>
+      <p class="modal-text">
+        Your answers to the palate questions help your guide prepare a tasting and narrative path tailored to your taste.
+        Before you begin, we'd like to be clear about what we collect, why, and how it is used.
+      </p>
+
+      <ul class="modal-list">
+        <li><strong>What we collect:</strong> your contact information, palate preferences, and visit details.</li>
+        <li><strong>Why:</strong> to confirm your booking, brief your guide, and (with your permission) keep you informed about ARARAT.</li>
+        <li><strong>How long we keep it:</strong> for as long as you remain a registered guest. You can request deletion at any time.</li>
+        <li><strong>Who we share it with:</strong> only the ARARAT Museum guide team and our authorized booking and CRM partners.</li>
+        <li><strong>Your rights:</strong> access, correction, deletion, and portability under Armenian Law HO-49-N and (for EU/EEA visitors) the GDPR.</li>
+      </ul>
+
+      <div class="consent-checks">
+        <label class="consent-check">
+          <input type="checkbox" id="consentRequired">
+          <span>
+            <strong>Required</strong>
+            I agree to ARARAT Museum collecting and processing my booking and palate data to confirm my reservation and prepare my visit.
+            <span class="consent-required">(Required to proceed)</span>
+          </span>
+        </label>
+        <label class="consent-check">
+          <input type="checkbox" id="consentMarketing">
+          <span>
+            <strong>Optional</strong>
+            I would like to receive occasional communications from ARARAT — limited editions, museum events, and seasonal invitations. I can unsubscribe at any time.
+          </span>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="declineConsent">Decline &amp; Skip</button>
+        <button class="btn btn-primary" id="acceptConsent" disabled>Begin questionnaire &nbsp;→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════════
+const state = {
+  currentStep: 1,
+  pkg: null,
+  pkgName: null,
+  price: 0,
+  date: '',
+  time: '',
+  guests: 2,
+  language: 'English',
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  country: '',
+  occasion: '',
+  consent: { required: false, marketing: false, timestamp: null },
+  palate: { experience: null, palate: null, motivation: null, pace: null },
+  reference: null,
+  bookedAt: null
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════════
+const $ = (q) => document.querySelector(q);
+const $$ = (q) => document.querySelectorAll(q);
+
+function fmtAMD(n) {
+  return Number(n).toLocaleString('en-US') + ' AMD';
+}
+function fmtDateLong(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+function genReference() {
+  const ts = Date.now().toString(36).toUpperCase().slice(-5);
+  const rnd = Math.random().toString(36).toUpperCase().slice(2, 5);
+  return `ARM-${ts}${rnd}`;
+}
+
+function goToStep(n) {
+  state.currentStep = n;
+  $$('.stage').forEach(s => s.classList.toggle('active', +s.dataset.stage === n));
+  $$('.step').forEach(s => {
+    const sn = +s.dataset.step;
+    s.classList.toggle('active', sn === n);
+    s.classList.toggle('complete', sn < n);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateAside() {
+  $('#aside-pkg').textContent  = state.pkgName || '—';
+  $('#aside-date').textContent = fmtDateLong(state.date);
+  $('#aside-time').textContent = state.time || '—';
+  $('#aside-guests').textContent = state.guests === '8+' ? '8+ (group)' : state.guests;
+  $('#aside-lang').textContent = state.language;
+  if (state.guests === '8+') {
+    $('#aside-total').textContent = 'On request';
+  } else {
+    const total = state.price * state.guests;
+    $('#aside-total').textContent = state.price ? fmtAMD(total) : '— AMD';
+  }
+  validateStage2();
+}
+
+function validateStage2() {
+  const ok = state.date && state.time;
+  $('#goto3').disabled = !ok;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  STAGE 1 — Package selection
+// ═══════════════════════════════════════════════════════════════════
+$$('.pkg').forEach(card => {
+  card.addEventListener('click', () => {
+    $$('.pkg').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.pkg = card.dataset.pkg;
+    state.pkgName = card.dataset.name;
+    state.price = +card.dataset.price;
+    $('#goto2').disabled = false;
+  });
+});
+
+$('#goto2').addEventListener('click', () => {
+  // Set min date to today, max to +60 days
+  const today = new Date();
+  const max = new Date(today.getTime() + 60 * 86400000);
+  $('#visitDate').min = today.toISOString().split('T')[0];
+  $('#visitDate').max = max.toISOString().split('T')[0];
+  updateAside();
+  goToStep(2);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  STAGE 2 — Date / Time / Guests
+// ═══════════════════════════════════════════════════════════════════
+$('#visitDate').addEventListener('change', e => {
+  state.date = e.target.value;
+  updateAside();
+});
+$$('.time-slot').forEach(slot => {
+  slot.addEventListener('click', () => {
+    $$('.time-slot').forEach(s => s.classList.remove('selected'));
+    slot.classList.add('selected');
+    state.time = slot.dataset.time;
+    updateAside();
+  });
+});
+$('#guestCount').addEventListener('change', e => {
+  state.guests = e.target.value === '8+' ? '8+' : +e.target.value;
+  updateAside();
+});
+$('#tourLanguage').addEventListener('change', e => { state.language = e.target.value; updateAside(); });
+$('#goto3').addEventListener('click', () => goToStep(3));
+
+// ═══════════════════════════════════════════════════════════════════
+//  STAGE 3 — Guest details → opens consent modal before quiz
+// ═══════════════════════════════════════════════════════════════════
+$('#goto4').addEventListener('click', () => {
+  // Capture details
+  state.firstName = $('#firstName').value.trim();
+  state.lastName  = $('#lastName').value.trim();
+  state.email     = $('#email').value.trim();
+  state.phone     = $('#phone').value.trim();
+  state.country   = $('#country').value.trim();
+  state.occasion  = $('#occasion').value;
+
+  // Light validation
+  if (!state.firstName || !state.lastName || !state.email) {
+    alert('Please complete your name and email so we can confirm your booking.');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  // Open consent modal
+  $('#consentModal').classList.add('open');
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  CONSENT MODAL
+// ═══════════════════════════════════════════════════════════════════
+$('#consentRequired').addEventListener('change', e => {
+  $('#acceptConsent').disabled = !e.target.checked;
+});
+
+$('#acceptConsent').addEventListener('click', () => {
+  state.consent.required = $('#consentRequired').checked;
+  state.consent.marketing = $('#consentMarketing').checked;
+  state.consent.timestamp = new Date().toISOString();
+  $('#consentModal').classList.remove('open');
+  goToStep(4);
+});
+
+$('#declineConsent').addEventListener('click', () => {
+  if (confirm('Declining means we cannot personalize your tasting experience or save your preferences. You can still complete your booking with the standard tour. Continue?')) {
+    state.consent.required = false;
+    state.consent.marketing = false;
+    state.consent.timestamp = new Date().toISOString();
+    state.palate = { experience: 'declined', palate: 'declined', motivation: 'declined', pace: 'declined' };
+    $('#consentModal').classList.remove('open');
+    confirmBooking();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  STAGE 4 — Palate quiz
+// ═══════════════════════════════════════════════════════════════════
+$$('.quiz-question').forEach(q => {
+  const key = q.dataset.q;
+  q.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      q.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.palate[key] = opt.dataset.val;
+      // Enable continue when all four answered
+      const done = Object.values(state.palate).every(v => v !== null);
+      $('#goto5').disabled = !done;
+    });
+  });
+});
+
+$('#goto5').addEventListener('click', () => confirmBooking());
+
+// ═══════════════════════════════════════════════════════════════════
+//  Back buttons
+// ═══════════════════════════════════════════════════════════════════
+$$('[data-back]').forEach(btn => {
+  btn.addEventListener('click', () => goToStep(+btn.dataset.back));
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  PROFILE GENERATION (the spirit profile)
+// ═══════════════════════════════════════════════════════════════════
+function buildProfile() {
+  const { experience, palate, motivation, pace } = state.palate;
+
+  // Title naming logic
+  const titleMap = {
+    'newcomer-heritage': 'The Heritage Discoverer',
+    'newcomer-craft': 'The Curious Apprentice',
+    'newcomer-story': 'The Story-Seeker',
+    'newcomer-taste': 'The Open Palate',
+    'curious-heritage': 'The Curious Traveler',
+    'curious-craft': 'The Inquiring Mind',
+    'curious-story': 'The Story Companion',
+    'curious-taste': 'The Tasting Wanderer',
+    'seasoned-heritage': 'The Seasoned Heritage Guest',
+    'seasoned-craft': 'The Studied Drinker',
+    'seasoned-story': 'The Cultivated Listener',
+    'seasoned-taste': 'The Practiced Palate',
+    'connoisseur-heritage': 'The Heritage Connoisseur',
+    'connoisseur-craft': 'The Master\'s Companion',
+    'connoisseur-story': 'The Custodian of Stories',
+    'connoisseur-taste': 'The Connoisseur'
+  };
+  const titleKey = `${experience}-${motivation}`;
+  const title = titleMap[titleKey] || 'The ARARAT Guest';
+
+  // Tagline based on palate + motivation
+  const palateWords = {
+    floral: 'A floral and bright palate',
+    balanced: 'A balanced and warm palate',
+    rich: 'A rich and complex palate',
+    surprise: 'An open palate willing to be guided'
+  };
+  const motivationWords = {
+    heritage: 'drawn to the heritage behind the bottle',
+    craft: 'drawn to the craft of the master blender',
+    story: 'drawn to the stories woven into ARARAT',
+    taste: 'drawn first and foremost to the tasting itself'
+  };
+  const tagline = `${palateWords[palate] || 'An evolving palate'}, ${motivationWords[motivation] || 'discovering ARARAT'}.`;
+
+  // Recommendation logic
+  const recs = {
+    'floral-newcomer': 'Begin with ARARAT Ani 7yr — its floral, lightly honeyed character is the most welcoming entry into the ARARAT range. Conclude with the Apricot to surprise the palate.',
+    'floral-curious': 'Lead with Ani 7yr, then move to Akhtamar 10yr to show how floral notes deepen with age. Reserve Apricot for a closing flourish.',
+    'floral-seasoned': 'Open with Ani then Akhtamar, drawing attention to the evolution of floral notes through aging. The Vaspurakan finish gives complexity without losing brightness.',
+    'floral-connoisseur': 'Begin with Akhtamar, move to Vaspurakan 15yr, and conclude with Nairi 20yr to demonstrate how the floral signature carries into the museum\'s most refined expressions.',
+
+    'balanced-newcomer': 'Akhtamar 10yr is the ideal first pour — vanilla, oak, and dried apricot in calm proportion. Follow with the Three Stars for context.',
+    'balanced-curious': 'Akhtamar 10yr followed by Vaspurakan 15yr shows how balance gathers depth with time. Reserve a small pour of Nairi if curiosity carries.',
+    'balanced-seasoned': 'A side-by-side of Akhtamar, Vaspurakan, and the Armenia 10yr from the comparative collection. The contrast within a single decade is the lesson here.',
+    'balanced-connoisseur': 'Move to the Dvin Collection Reserve and the Nairi 20yr. Both reward a well-trained palate trained on balance.',
+
+    'rich-newcomer': 'A gentle entry through Akhtamar 10yr before progressing to Nairi 20yr, where the deep tobacco-and-leather character becomes legible.',
+    'rich-curious': 'Vaspurakan 15yr followed by Nairi 20yr. Spend extra time at Nairi — the long finish is where the richness fully unfolds.',
+    'rich-seasoned': 'A vertical from Vaspurakan 15yr to Nairi 20yr. Frame the tasting around the role of oak and time in developing rich expressions.',
+    'rich-connoisseur': 'The Founders\' tier is what we would suggest at your next visit. For today, lead with Dvin Collection Reserve and Nairi 20yr — the richness here is unrivaled in the standard range.',
+
+    'surprise-newcomer': 'Trust the guide. Begin with Three Stars and Ani 7yr to establish a baseline, then let the master blender choose what follows.',
+    'surprise-curious': 'A guide-led journey through Ani, Akhtamar, and one wildcard expression chosen on the day. The element of surprise is the lesson.',
+    'surprise-seasoned': 'A blind comparative tasting across two decades, presented without labels and revealed at the end. This is the most engaging way to taste for the experienced drinker who wants to be surprised.',
+    'surprise-connoisseur': 'A bespoke tasting curated by your guide on arrival. We will choose three expressions that respond to today\'s mood — and explain the choice as we pour.'
+  };
+  const recKey = `${palate}-${experience}`;
+  const recommendation = recs[recKey] || 'Your guide will design a tasting path on arrival, drawing on your answers to recommend expressions that reflect your palate and pace.';
+
+  // Pace note appended
+  const paceNote = {
+    contemplative: ' Your guide will hold the pace deliberately, leaving space between expressions for reflection.',
+    conversational: ' Your guide will plan an open dialogue throughout, with stops for questions at each stage.',
+    immersive: ' Your guide will lean into the sensory and narrative dimensions of the tour — barrels, projection, oral histories at full depth.',
+    efficient: ' Your guide will respect your timing while preserving the heart of each expression.'
+  };
+
+  return {
+    title,
+    tagline,
+    recommendation: recommendation + (paceNote[pace] || '')
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  CONFIRM BOOKING
+// ═══════════════════════════════════════════════════════════════════
+function confirmBooking() {
+  state.reference = genReference();
+  state.bookedAt = new Date().toISOString();
+
+  const profile = state.consent.required ? buildProfile() : {
+    title: 'The ARARAT Guest',
+    tagline: 'A standard tour without personalized profiling.',
+    recommendation: 'Your guide will deliver the standard tasting path for your selected package.'
+  };
+
+  $('#confirmRef').textContent = state.reference;
+  $('#profileTitle').textContent = profile.title;
+  $('#profileTagline').textContent = profile.tagline;
+  $('#profileName').textContent = `${state.firstName} ${state.lastName}`;
+  $('#profileRef').textContent = state.reference;
+  $('#profileVisit').textContent = `${fmtDateLong(state.date)} · ${state.time}`;
+  $('#profilePackage').textContent = state.pkgName;
+  $('#profileGuestsLang').textContent = `${state.guests === '8+' ? '8+ (group)' : state.guests} · ${state.language}`;
+  $('#profileTotal').textContent = state.guests === '8+' ? 'Pricing on request' : fmtAMD(state.price * state.guests);
+  $('#profileRecs').textContent = profile.recommendation;
+
+  state._profile = profile;
+  goToStep(5);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  EXPORTS
+// ═══════════════════════════════════════════════════════════════════
+function downloadFile(filename, content, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+$('#downloadJSON').addEventListener('click', () => {
+  const exportData = {
+    booking: {
+      reference: state.reference,
+      bookedAt: state.bookedAt,
+      package: { id: state.pkg, name: state.pkgName, pricePerGuest_AMD: state.price },
+      visitDate: state.date,
+      tourTime: state.time,
+      guests: state.guests,
+      language: state.language,
+      totalAmount_AMD: state.guests === '8+' ? 'on_request' : state.price * state.guests,
+      groupInquiry: state.guests === '8+'
+    },
+    guest: {
+      firstName: state.firstName,
+      lastName: state.lastName,
+      email: state.email,
+      phone: state.phone,
+      country: state.country,
+      occasion: state.occasion || null
+    },
+    consent: state.consent,
+    palateProfile: state.palate,
+    spiritProfile: state._profile || null,
+    _meta: {
+      source: 'ARARAT Museum Booking Prototype',
+      version: '1.0',
+      exportedAt: new Date().toISOString()
+    }
+  };
+  downloadFile(
+    `ARARAT-Booking-${state.reference}.json`,
+    JSON.stringify(exportData, null, 2),
+    'application/json'
+  );
+});
+
+$('#downloadHTML').addEventListener('click', () => {
+  const p = state._profile || { title: '', tagline: '', recommendation: '' };
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ARARAT Booking ${state.reference}</title>
+<style>
+body { font-family: 'Times New Roman', serif; max-width: 700px; margin: 40px auto; padding: 0 30px; color: #1a1a1a; line-height: 1.55; }
+h1 { font-size: 32px; margin-bottom: 6px; border-bottom: 2px solid #C9A84C; padding-bottom: 12px; }
+h2 { font-size: 18px; color: #8B6914; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 30px; margin-bottom: 12px; font-weight: normal; }
+.ref { display: inline-block; background: #1a1a1a; color: #C9A84C; padding: 6px 14px; letter-spacing: 0.2em; font-family: monospace; }
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+td { padding: 6px 0; border-bottom: 1px dotted #ccc; font-size: 14px; }
+td:first-child { color: #6b6b6b; width: 35%; }
+.profile { background: #1a1a1a; color: #f8f5ec; padding: 28px; margin-top: 28px; }
+.profile h3 { color: #C9A84C; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: normal; margin-bottom: 8px; }
+.profile h2 { color: #f8f5ec; margin: 0 0 6px; font-size: 26px; text-transform: none; letter-spacing: 0; }
+.profile p.tag { font-style: italic; color: #E8D89A; margin-bottom: 18px; }
+.profile p.rec { border-left: 2px solid #C9A84C; padding-left: 14px; margin-top: 14px; }
+.foot { margin-top: 30px; font-size: 11px; color: #888; font-style: italic; }
+</style></head><body>
+<h1>ARARAT Museum — Reservation</h1>
+<p class="ref">${state.reference}</p>
+<h2>Booking</h2>
+<table>
+  <tr><td>Guest</td><td>${state.firstName} ${state.lastName}</td></tr>
+  <tr><td>Email</td><td>${state.email}</td></tr>
+  <tr><td>Phone</td><td>${state.phone || '—'}</td></tr>
+  <tr><td>Country</td><td>${state.country || '—'}</td></tr>
+  <tr><td>Visit</td><td>${fmtDateLong(state.date)} · ${state.time}</td></tr>
+  <tr><td>Experience</td><td>${state.pkgName}</td></tr>
+  <tr><td>Guests &amp; Language</td><td>${state.guests === '8+' ? '8+ (group)' : state.guests} · ${state.language}</td></tr>
+  <tr><td>Total</td><td><strong>${state.guests === '8+' ? 'Pricing on request' : fmtAMD(state.price * state.guests)}</strong></td></tr>
+</table>
+<div class="profile">
+  <h3>Spirit Profile</h3>
+  <h2>${p.title}</h2>
+  <p class="tag">${p.tagline}</p>
+  <p class="rec">${p.recommendation}</p>
+</div>
+<p class="foot">Generated ${new Date().toLocaleString()} · ARARAT Museum Booking Prototype · BAB Capstone, American University of Armenia</p>
+</body></html>`;
+  downloadFile(`ARARAT-Booking-${state.reference}.html`, html, 'text/html');
+});
+
+$('#printConfirm').addEventListener('click', () => window.print());
+
+$('#restart').addEventListener('click', () => {
+  if (confirm('Start a new booking? Current details will be cleared.')) {
+    location.reload();
+  }
+});
+</script>
+
+</body>
+</html>
